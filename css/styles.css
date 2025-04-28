@@ -21,4 +21,17 @@ nav ul {
 body {
   margin: 0;
   font-family: sans-serif;
+  background-color: rgb(37, 37, 37);
+  color: aliceblue;
+  padding: 50px;
+}
+.header {
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+.playBoard {
+  border: 3px solid red;
+  height: 900px;
+  width: 900px;
+  display: grid;
 }
