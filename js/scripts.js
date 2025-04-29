@@ -1,51 +1,46 @@
 const playBoardElement = document.getElementById('playBoard');
-
 let pokemons = [];
 let spinCard = [];
 
-let lockBoard = false;
+// Función para manejar los clics en las cartas
+const handleCardClick = e => {
+  const clickedCard = e.target.closest('.card');
 
-const getClickCard = event => {
-  const getClick = event.target;
-
-  if (!getClick.classList.contains('card-back')) return;
-
-  const card = getClick.parentElement;
-
-  // ❌ Bloquear si ya está girada o acertada
   if (
-    card.classList.contains('click') ||
-    card.classList.contains('matched') ||
-    lockBoard
+    !clickedCard ||
+    clickedCard.classList.contains('click') ||
+    clickedCard.classList.contains('matched')
   )
     return;
 
-  card.classList.add('click');
-  spinCard.push(card);
+  // No dejar girar más de 2 cartas
+  if (spinCard.length === 2) return;
 
+  clickedCard.classList.add('click');
+  spinCard.push(clickedCard);
+
+  // Comparar cuando haya dos cartas
   if (spinCard.length === 2) {
-    lockBoard = true; // ⛔ Bloquear más clics temporalmente
+    const [first, second] = spinCard;
+    const id1 = first.dataset.id;
+    const id2 = second.dataset.id;
 
-    const firstId = spinCard[0].dataset.id;
-    const secondId = spinCard[1].dataset.id;
-
-    if (firstId === secondId) {
-      // ✅ Cartas iguales
-      spinCard[0].classList.add('matched');
-      spinCard[1].classList.add('matched');
+    if (id1 === id2) {
+      // Coinciden: se quedan giradas
+      first.classList.add('matched');
+      second.classList.add('matched');
       spinCard = [];
-      lockBoard = false;
     } else {
-      // ❌ Cartas distintas → girarlas de nuevo tras delay
+      // No coinciden: se giran de nuevo
       setTimeout(() => {
-        spinCard[0].classList.remove('click');
-        spinCard[1].classList.remove('click');
+        first.classList.remove('click');
+        second.classList.remove('click');
         spinCard = [];
-        lockBoard = false; // 🔓 Desbloquear clics
       }, 1000);
     }
   }
 };
+
 const getRandomNumber = () => {
   return Math.floor(Math.random() * 151 + 1);
 };
@@ -57,8 +52,6 @@ const pokemonImage = () => {
       pokemons.push(randomNumber);
     }
   }
-
-  // Duplicar y mezclar los pokémon para formar las parejas
   pokemons = [...pokemons, ...pokemons].sort(() => Math.random() - 0.5);
 };
 
@@ -68,7 +61,7 @@ const printCards = () => {
   pokemons.forEach(pokemon => {
     const card = document.createElement('div');
     card.classList.add('card');
-    card.dataset.id = pokemon; // ← ahora sí tienen identificador para compararlas
+    card.dataset.id = pokemon;
 
     const cardFront = document.createElement('div');
     cardFront.classList.add('card-front');
@@ -76,32 +69,34 @@ const printCards = () => {
       '--pokemon-img',
       `url(../assets/images/${pokemon}.png)`
     );
-    card.append(cardFront);
 
     const cardBack = document.createElement('div');
     cardBack.classList.add('card-back');
-    card.append(cardBack);
 
+    card.append(cardFront, cardBack);
     fragment.append(card);
   });
 
   playBoardElement.append(fragment);
 };
 
-// Mostrar todas al principio
-setTimeout(() => {
-  document.querySelectorAll('.card').forEach(card => {
-    card.classList.add('card-clicked');
-  });
-}, 1000);
+// Mostrar todas al inicio por 1 segundo
+const showAllCardsInitially = () => {
+  setTimeout(() => {
+    document
+      .querySelectorAll('.card')
+      .forEach(card => card.classList.add('click'));
+  }, 1000);
 
-setTimeout(() => {
-  document.querySelectorAll('.card').forEach(card => {
-    card.classList.remove('card-clicked');
-  });
-}, 2000);
+  setTimeout(() => {
+    document
+      .querySelectorAll('.card')
+      .forEach(card => card.classList.remove('click'));
+  }, 2000);
+};
 
-// 🚀 Ejecutar el juego
+// Lanzar juego
 pokemonImage();
 printCards();
-playBoardElement.addEventListener('click', getClickCard);
+showAllCardsInitially();
+playBoardElement.addEventListener('click', handleCardClick);
