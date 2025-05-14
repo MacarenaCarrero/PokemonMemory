@@ -38,7 +38,6 @@ body {
   justify-content: center;
 }
 
-/* --- CARTAS --- */
 .card {
   position: relative;
   width: 150px;
@@ -60,7 +59,6 @@ body {
   box-shadow: 3px 3px 9px rgb(190, 21, 21);
 }
 
-/* Parte delantera de la carta (imagen pokémon) */
 .card-front {
   background-image: var(--pokemon-img);
   background-size: 85%;
@@ -69,7 +67,6 @@ body {
   transform: rotateY(180deg);
 }
 
-/* Parte trasera de la carta */
 .card-back {
   background-color: pink;
   transform: rotateY(0deg);
@@ -83,7 +80,6 @@ body {
   transform: rotateY(180deg);
 }
 
-/* Para el efecto de mostrar todas al inicio */
 .card-clicked .card-front {
   transform: rotateY(0deg);
 }

@@ -2,7 +2,7 @@ const playBoardElement = document.getElementById('playBoard');
 let pokemons = [];
 let spinCard = [];
 
-// Función para manejar los clics en las cartas
+// clics
 const handleCardClick = e => {
   const clickedCard = e.target.closest('.card');
 
@@ -13,25 +13,22 @@ const handleCardClick = e => {
   )
     return;
 
-  // No dejar girar más de 2 cartas
   if (spinCard.length === 2) return;
 
   clickedCard.classList.add('click');
   spinCard.push(clickedCard);
 
-  // Comparar cuando haya dos cartas
+  // Comparar
   if (spinCard.length === 2) {
     const [first, second] = spinCard;
     const id1 = first.dataset.id;
     const id2 = second.dataset.id;
 
     if (id1 === id2) {
-      // Coinciden: se quedan giradas
       first.classList.add('matched');
       second.classList.add('matched');
       spinCard = [];
     } else {
-      // No coinciden: se giran de nuevo
       setTimeout(() => {
         first.classList.remove('click');
         second.classList.remove('click');
@@ -80,7 +77,7 @@ const printCards = () => {
   playBoardElement.append(fragment);
 };
 
-// Mostrar todas al inicio por 1 segundo
+// Mostrar todas
 const showAllCardsInitially = () => {
   setTimeout(() => {
     document
